@@ -1,56 +1,30 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Link
-} from "react-router-dom";
+import "./App.css";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { createClient, Provider } from "urql";
+import Launches from "./routes/Launches";
+import Details from "./routes/Details";
+import Navbar from "../src/components/navbar/Navbar";
+import Box from "@mui/material/Box";
+
+const client = createClient({
+  url: "https://api.spacex.land/graphql/",
+});
 
 export default function App() {
   return (
-    <Router>
-      <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/about">About</Link>
-            </li>
-            <li>
-              <Link to="/users">Users</Link>
-            </li>
-          </ul>
-        </nav>
-
-        {/* A <Routes> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
+    <Provider value={client}>
+      <Navbar />
+      <Router>
+        <Box className="routes">
+          <Link to="/launches">Launches</Link>
+          <Link to="/details">Details</Link>
+        </Box>
         <Routes>
-          <Route path="/about">
-            <About />
-          </Route>
-          <Route path="/users">
-            <Users />
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
+          <Route path="/launches" element={<Launches />} />
+          <Route path="/details" element={<Details />} />
         </Routes>
-      </div>
-    </Router>
+      </Router>
+    </Provider>
   );
 }
-
-function Home() {
-  return <h2>Home</h2>;
-}
-
-function About() {
-  return <h2>About</h2>;
-}
-
-function Users() {
-  return <h2>Users</h2>;
-}
-
